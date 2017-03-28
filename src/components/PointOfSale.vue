@@ -1,93 +1,52 @@
 <template>
-  <div class="hello">
-    {{error}}
-    <div v-if="inventory.length">
-      <button v-on:click="logout">Logout</button>
-      <div
-        v-for="(item, index) of inventory"
-        class="item-button"
-      >
-        <div v-on:click="addToCart(item)">
-          <p> {{item.name }} </p>
-          <img v-bind:src="'./static/' + item.image">
-          <p>{{ (item.cost / 100).toFixed(2) }}</p>
-        </div>
-      </div>
+  <div class="items">
+    <button
+    v-for="(item, index) of inventory"
+    v-on:click="addToTotal(item.cost)"
+    >{{ item.name + " " + (item.cost * .01).toFixed(2) }}</button>
+    <div>
+      <input id="counter" v-bind:value="costs">
+      <button v-on:click="removeFromTotal">delete item</button>
     </div>
-    <div v-if="!inventory.length && !this.error">
-      Loading...
+    <div>
+      <p>{{ "Subtotal:  " + (getSum() * .01).toFixed(2)}}</p>
+      <p>Sales Tax: 8.5%</p>
+      <p>{{ "Total:  " + ((getSum() * .01) / .85).toFixed(2)}}</p>
     </div>
-    <div v-if="this.error === 'Not authenticated...'">
-      <input v-model="username">
-      <input type="password" v-model="password" v-on:keyup.13="login">
-      <button v-on:click="login">Login</button>
-      </div>
+    <div>
+      <button v-on:click="clearTotal">Finish</button>
+    </div>
   </div>
 </template>
 
 <script>
-
+import inventory from '@/assets/inventory'
 export default {
-  name: 'hello',
+  name: 'items',
   data () {
     return {
-      inventory: [],
-      cart: [],
-      error: '',
-      username: '',
-      password: '',
-      msg: 'Welcome to Your Vue.js App'
+      inventory: inventory,
+      costs: []
     }
   },
-  created () {
-    this.getItems()
-  },
   methods: {
-    addToCart (item) {
-      this.cart.push(item)
-      console.log(this.cart)
+    addToTotal (cost) {
+      this.costs.push(cost)
     },
-    getAuthHeader () {
-      return {
-        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+    removeFromTotal (cost) {
+      this.costs.pop()
+    },
+    clearTotal (costs) {
+      for (var i = this.costs.length; i >= 0; i--) {
+        this.costs.pop()
       }
     },
-    getItems () {
-      this.$http.get(
-        'http://localhost:3030/inventory',
-        { headers: this.getAuthHeader() }
-      )
-      .then(
-        function (res) { // first func is the success function
-          if (res.body === 'error') {
-            this.error = 'Not authenticated...'
-          } else {
-            this.error = ''
-            this.inventory = res.body
-          }
-        },
-        function (err) { // second func is the fail function
-          console.log(err)
-          this.error = 'Error getting data from server...'
-        }
-      )
-    },
-    login () {
-      this.$http.post('http://localhost:3030/login', {
-        username: this.username,
-        password: this.password
-      }).then(function (res) {
-        localStorage.setItem('jwt', res.body.jwt)
-        this.getItems()
-      }, function (err) {
-        console.log(err)
-        this.error = 'Not authenticated...'
-      })
-    },
-    logout () {
-      localStorage.clear()
-      this.inventory = []
-      this.error = 'Not authenticated...'
+    getSum () {
+      var sum = 0
+      for (var item of this.costs) {
+        sum += item
+      }
+      return sum
     }
   }
 }
@@ -95,14 +54,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.item-button img {
-  max-height: 128px;
+h1, h2 {
+  font-weight: normal;
 }
-.item-button {
-  float: left;
-  width: 128px;
-  height: 256px;
-  border: 2px solid black;
-  border-radius: 3px;
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+#counter {
+  width: 65%;
 }
 </style>

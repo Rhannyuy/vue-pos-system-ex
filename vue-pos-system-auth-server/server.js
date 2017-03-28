@@ -15,12 +15,12 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Session
-var session = require("express-session");
-app.use(session({
-	secret: 'keyboard cat', // secret key
-	resave: false, // default value
-	saveUninitialized: true, // saves empty objects
-}));
+// var session = require("express-session");
+// app.use(session({
+// 	secret: 'keyboard cat', // secret key
+// 	resave: false, // default value
+// 	saveUninitialized: true, // saves empty objects
+// }));
 
 var inventory = [
   {
