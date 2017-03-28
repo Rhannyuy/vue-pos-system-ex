@@ -3,7 +3,9 @@
     <button
     v-for="(item, index) of inventory"
     v-on:click="addToTotal(item.cost)"
-    >{{ item.name + " " + (item.cost * .01).toFixed(2) }}</button>
+    ><img v-bind:src="'/static/' + item.image" width = "50">
+    <br><br><br>
+    {{ item.name + " " + (item.cost * .01).toFixed(2) }}</button>
     <div>
       <input id="counter" v-bind:value="costs">
       <button v-on:click="removeFromTotal">delete item</button>

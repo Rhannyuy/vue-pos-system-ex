@@ -11,7 +11,7 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-	extended: true
+  extended: true
 }));
 
 // Session
@@ -96,32 +96,32 @@ var inventory = [
 ];
 
 app.get(
-	'/inventory',
-	function(req, res) {
-		// "Bearer: token"
-		var user_token = req.headers.authorization.split(' ')[1];
-		try {
-			jwt.verify(user_token, 'secret-key-goes-here');
-			res.send(inventory);
-		} catch (err) {
-			res.send("error");
-		}
+  '/inventory',
+  function(req, res) {
+    // "Bearer: token"
+    var user_token = req.headers.authorization.split(' ')[1];
+    try {
+      jwt.verify(user_token, 'secret-key-goes-here');
+      res.send(inventory);
+    } catch (err) {
+      res.send("error");
+    }
 
-	}
+  }
 );
 
 app.post('/login', function(req, res) {
-	if (req.body.username === "erty" && req.body.password === "1234") {
-		res.send({
-			jwt: jwt.sign(
-				{
-					user: 'erty'
-				},
-				'secret-key-goes-here'
-			)
-		});
+  if (req.body.username === "erty" && req.body.password === "1234") {
+    res.send({
+      jwt: jwt.sign(
+        {
+          user: 'erty'
+        },
+        'secret-key-goes-here'
+      )
+    });
 
-	}
+  }
 });
 
 // Serve Static Files
@@ -129,19 +129,19 @@ app.use(express.static('public'));
 
 // 404 Middleware
 app.use(function(req, res, next) {
-	res.status(404);
-	res.send("404 File Not Found ... :( ");
+  res.status(404);
+  res.send("404 File Not Found ... :( ");
 });
 
 // 500 Middleware
 app.use(function(err, req, res, next) {
-	console.log(err);
-	res.status(500);
-	res.send("500 Internal server error... D:");
+  console.log(err);
+  res.status(500);
+  res.send("500 Internal server error... D:");
 });
 
 
 // Actually Start the Server
 app.listen(3030, function() {
-	console.log("ok you have a server :)");
+  console.log("ok you have a server :)");
 });
