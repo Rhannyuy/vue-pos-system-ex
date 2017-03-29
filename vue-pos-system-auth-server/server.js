@@ -95,6 +95,7 @@ var inventory = [
   }
 ];
 
+// access the inventory
 app.get(
   '/inventory',
   function(req, res) {
@@ -109,7 +110,7 @@ app.get(
 
   }
 );
-
+// login token
 app.post('/login', function(req, res) {
   if (req.body.username === "erty" && req.body.password === "1234") {
     res.send({
